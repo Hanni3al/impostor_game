@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Impostor - Gra Towarzyska</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background-color: #f0f0f0;
+      padding: 2em;
+    }
+    .hidden { display: none; }
+    button {
+      font-size: 1.2em;
+      padding: 1em;
+      margin: 1em;
+    }
+    #wordBox {
+      font-size: 2em;
+      margin: 2em 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🕵️ Impostor - Gra dla 4 Osób</h1>
+  <div id="startSection">
+    <button onclick="startGame()">Rozpocznij nową rundę</button>
+  </div>
+
+  <div id="revealSection" class="hidden">
+    <h2 id="playerLabel"></h2>
+    <button onclick="revealWord()">Pokaż słowo</button>
+  </div>
+
+  <div id="wordSection" class="hidden">
+    <div id="wordBox"></div>
+    <button onclick="nextPlayer()">Ukryj i przekaz telefon</button>
+  </div>
+
+  <div id="endSection" class="hidden">
+    <h2>Wszyscy gracze otrzymali swoje słowa!</h2>
+    <button onclick="startGame()">Nowa runda</button>
+  </div>
+
+  <script>
+    const wordList = [
+      "komputer", "kawa", "rower", "kosmos", "samolot", "telefon", "drzewo", "pizza",
+      "biblioteka", "muzyka", "plaża", "zamek", "klawiatura", "lampa", "rower",
+      "mięso", "szkoła", "kino", "autobus", "zegar", "telewizor", "mikrofon", "ogród",
+      "książka", "papuga", "czekolada", "dinozaur", "narty", "basen", "wulkan",
+      "kamera", "radio", "samochód", "frytki", "smok", "robot", "śnieg", "kaktus",
+      "gitara", "zegarek", "kalkulator", "trampolina", "głowa", "mapa", "mysz",
+      "butelka", "piłka", "lędźwia", "pędzel", "lódźka"
+    ];
+
+    let currentWord = "";
+    let roles = [];
+    let playerIndex = 0;
+    let usedWords = [];
+
+    function getRandomWord() {
+      if (wordList.length === 0) return "BRAK SŁÓW";
+      let index = Math.floor(Math.random() * wordList.length);
+      let word = wordList.splice(index, 1)[0];
+      usedWords.push(word);
+      return word;
+    }
+
+    function startGame() {
+      currentWord = getRandomWord();
+      roles = [currentWord, currentWord, currentWord, "Jesteś IMPOSTOREM!"];
+      roles = shuffleArray(roles);
+      playerIndex = 0;
+      document.getElementById("startSection").classList.add("hidden");
+      document.getElementById("endSection").classList.add("hidden");
+      document.getElementById("revealSection").classList.remove("hidden");
+      document.getElementById("playerLabel").innerText = `Gracz ${playerIndex + 1} - kliknij, aby poznać swoje słowo`;
+    }
+
+    function revealWord() {
+      document.getElementById("revealSection").classList.add("hidden");
+      document.getElementById("wordSection").classList.remove("hidden");
+      document.getElementById("wordBox").innerText = roles[playerIndex];
+    }
+
+    function nextPlayer() {
+      playerIndex++;
+      document.getElementById("wordSection").classList.add("hidden");
+
+      if (playerIndex < 4) {
+        document.getElementById("revealSection").classList.remove("hidden");
+        document.getElementById("playerLabel").innerText = `Gracz ${playerIndex + 1} - kliknij, aby poznać swoje słowo`;
+      } else {
+        document.getElementById("endSection").classList.remove("hidden");
+      }
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+  </script>
+</body>
+</html>
+
+Dodano grę impostor
